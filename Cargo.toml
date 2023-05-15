@@ -1,0 +1,11 @@
+[package]
+name = "project2"
+version = "0.1.0"
+authors = ["Johnathyn Strong", "David Jennings"]
+edition = "2018"
+
+[dependencies]
+ctrlc="3.2.5"
+pest="2.5.6"
+pest_derive="2.5.6"
+chrono="0.4.24"
