@@ -1,5 +1,5 @@
 use std::fs::{File, OpenOptions};
-use std::io::{self, Write, Error, ErrorKind};
+use std::io::{self, Error, ErrorKind, Write};
 use std::process::{Child, Command, Output, Stdio};
 
 /// Handles redirection
@@ -88,11 +88,12 @@ fn handle_stderr_redirect(
     tokens: &[String],
     process: Option<Command>,
 ) -> Result<Option<Command>, Error> {
-
     //check that a file for redirect was provided
     if tokens.is_empty() {
-        return Err(Error::new(ErrorKind::InvalidInput,
-                              "Usage: <command> [args] 2> <file>"));
+        return Err(Error::new(
+            ErrorKind::InvalidInput,
+            "Usage: <command> [args] 2> <file>",
+        ));
     }
 
     //the name of the file should be the only item in the array
@@ -196,11 +197,12 @@ fn handle_stdin_redirect(
     tokens: &[String],
     process: Option<Command>,
 ) -> Result<Option<Command>, Error> {
-
     //check that a file for redirect was provided
     if tokens.is_empty() {
-        return Err(Error::new(ErrorKind::InvalidInput,
-                              "Usage: <command> [args] < <file>"));
+        return Err(Error::new(
+            ErrorKind::InvalidInput,
+            "Usage: <command> [args] < <file>",
+        ));
     }
 
     //the name of the file should be the only item in the array
@@ -209,9 +211,11 @@ fn handle_stdin_redirect(
     //open the file
     let file: File = File::open(file_name)?;
 
-
     //create new process from passed parameter
-    let mut command: Command = process.ok_or(Error::new(ErrorKind::InvalidInput, "Usage: <command> [args] < <file>"))?;
+    let mut command: Command = process.ok_or(Error::new(
+        ErrorKind::InvalidInput,
+        "Usage: <command> [args] < <file>",
+    ))?;
 
     //enable set the stdin of the process to be the file
     command.stdin(Stdio::from(file));
@@ -234,29 +238,26 @@ fn handle_stdin_redirect(
 fn handle_pipe(commands: &[String], process: Option<Command>) -> Result<Option<Command>, Error> {
     // If RHS of pipe is empty
     if commands.len() == 0 {
-        return Err(Error::new(ErrorKind::InvalidInput,
-                              "Usage: <command> | <command>"))
+        return Err(Error::new(
+            ErrorKind::InvalidInput,
+            "Usage: <command> | <command>",
+        ));
     }
 
     // Create the RHS command
-    let mut setup_command:Command = Command::new(&commands[0]);
+    let mut setup_command: Command = Command::new(&commands[0]);
 
     // If the RHS command has arguments add them
     if commands.len() > 1 {
-        let command_args:&[String] = &commands[1..commands.len()];
+        let command_args: &[String] = &commands[1..commands.len()];
         setup_command.args(command_args);
     }
 
     // Get the output of the LHS command
-    let process_output: Child = process
-        .unwrap()
-        .stdout(Stdio::piped())
-        .spawn()?;
+    let process_output: Child = process.unwrap().stdout(Stdio::piped()).spawn()?;
 
     // Pipe the output of the LHS command to the RHS command
-    setup_command.stdin(process_output
-        .stdout
-        .unwrap());
+    setup_command.stdin(process_output.stdout.unwrap());
 
     Ok(Option::from(setup_command))
 }

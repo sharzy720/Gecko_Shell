@@ -25,7 +25,7 @@ impl History {
         for command in &self.commands {
             println!("{} > {:?}", count, &command.join(" "));
 
-            count = &count +1;
+            count = &count + 1;
         }
     }
 
@@ -51,7 +51,11 @@ impl History {
 
         // Display commands
         while count != num_commands {
-            println!("{} > {:?}", current_index, &self.commands[current_index].join(" "));
+            println!(
+                "{} > {:?}",
+                current_index,
+                &self.commands[current_index].join(" ")
+            );
 
             current_index = &current_index + 1;
             count = &count + 1;

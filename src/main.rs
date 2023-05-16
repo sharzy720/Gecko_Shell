@@ -1,13 +1,15 @@
 pub mod builtin;
+pub mod config;
 pub mod history;
 pub mod parser;
 pub mod redirect;
 pub mod utils;
 
-use ctrlc::set_handler;
 use crate::builtin::builtin;
+use crate::config::Config;
 use crate::history::History;
 use crate::utils::{execute, parse_line, prompt_and_read};
+use ctrlc::set_handler;
 
 /// An implementation of a simple UNIX shell.  This program supports:
 ///    - Running processes
@@ -32,8 +34,11 @@ use crate::utils::{execute, parse_line, prompt_and_read};
 ///    - Conditionally chaining processes (p1 && p2 or p1 || p2)
 ///    - re-executing history commands
 
-
 fn main() {
+    let mut config: Config = Config::new();
+
+    config.read_config_file();
+
     // History object to track every command entered during the lifetime of the program
     let mut history: History = History::new();
 
@@ -47,17 +52,22 @@ fn main() {
         history.add_to_history(&tokens);
 
         // Check if user want to run a builtin or not
-        if let Ok(false) = builtin(&tokens, &mut history) {
+        if let Ok(false) = builtin(&tokens, &mut history, &config) {
             // Returned process from parsed line
             let parsed_command = parse_line(&tokens, None);
 
             if let Ok(Some(mut child)) = parsed_command {
-
                 if let Err(e) = execute(&mut child) {
-
                     // Stops shell when exit is entered
-                    if &tokens[0] == "exit" { break; }
-                    else { eprintln!("\x1b[38;2;255;0;0mError: Could not execute process.\n{}\x1b[0m", e); }
+                    if &tokens[0] == "exit" {
+                        break;
+                    } else {
+                        eprintln!(
+                            "\x1b[38;2;{}mError: Could not execute process.\n{}\x1b[0m",
+                            &config.get("error_text_color"),
+                            e
+                        );
+                    }
                 }
             } else {
                 // Reasons this will execute:
@@ -70,9 +80,8 @@ fn main() {
                 //      Specifically, writing to stdout/stderr in parse_line
 
                 if let Err(e) = parsed_command {
-                    eprintln!("\x1b[38;2;255;0;0m{}\x1b[0m", e);
+                    eprintln!("\x1b[38;2;{}m{}\x1b[0m", &config.get("error_text_color"), e);
                 }
-
             }
         } else {
             // Reasons this will execute:

@@ -165,6 +165,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "gecko"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "ctrlc",
+ "pest",
+ "pest_derive",
+]
+
+[[package]]
 name = "generic-array"
 version = "0.14.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -319,16 +329,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d0e1ae9e836cc3beddd63db0df682593d7e2d3d891ae8c9083d2113e1744224"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "project2"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "ctrlc",
- "pest",
- "pest_derive",
 ]
 
 [[package]]

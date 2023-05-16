@@ -1,8 +1,8 @@
 use crate::parser::parse;
 use crate::redirect::redirect;
 use std::io::{stdin, stdout, Error, Write};
-use std::process::{Child, id, Output};
 use std::process::Command;
+use std::process::{id, Child, Output};
 
 /// A simple wrapper that displays a prompt and reads a line of input from the user.
 ///
@@ -47,7 +47,10 @@ pub fn execute(process: &mut Command) -> Result<(), Error> {
         Err(e) => return Err(e),
     };
 
-    println!("Child {} exited with status {}", child_id , child_output.status);
+    println!(
+        "Child {} exited with status {}",
+        child_id, child_output.status
+    );
 
     Ok(())
 }

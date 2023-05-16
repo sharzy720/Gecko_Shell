@@ -1,0 +1,6 @@
+# colors should be in the format R;G;B
+# ls settings
+directory_text_color:42;125;211
+filename_text_color:192;192;192
+# Error message settings
+error_text_color:255;0;0

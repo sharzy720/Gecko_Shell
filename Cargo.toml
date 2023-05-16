@@ -1,5 +1,5 @@
 [package]
-name = "project2"
+name = "gecko"
 version = "0.1.0"
 authors = ["Johnathyn Strong", "David Jennings"]
 edition = "2018"
