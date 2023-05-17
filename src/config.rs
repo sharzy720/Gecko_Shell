@@ -1,4 +1,4 @@
-use std::fs::{File};
+use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 pub struct Config {
@@ -48,6 +48,7 @@ impl Config {
         }
     }
 
+    /// Gets the color value for the given field
     pub fn get(&self, field_string: &str) -> String {
         return match field_string {
             "directory_text_color" => self.directory_text_color.clone(),
